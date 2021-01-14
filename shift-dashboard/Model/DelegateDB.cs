@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace shift_dashboard.Model
@@ -31,5 +32,7 @@ namespace shift_dashboard.Model
         public int Rank { get; set; }
         public double Approval { get; set; }
         public int Productivity { get; set; }
+
+        public ICollection<VoterDB> Voters {get; set;}
     }
 }

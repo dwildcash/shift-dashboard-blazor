@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace shift_dashboard.Model
@@ -24,5 +25,12 @@ namespace shift_dashboard.Model
 
         [MaxLength(24)]
         public string Balance { get; set; }
+
+        [Required]
+        public DateTime Date { get; set; }
+
+
+        public ICollection<DelegateDB> DelegatesVote {get; set;}
+
     }
 }

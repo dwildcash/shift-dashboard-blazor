@@ -1,8 +1,10 @@
 ﻿namespace shift_dashboard.Model
 {
-    public class ShiftDashboardOptions
+    public class ShiftDashboardConfig
     {
-        public const string Position = "ShiftDashboard";
+
+
+        public string Position = "ShiftDashboard";
         public string ApplicationName { get; set; }
         public string ConnectionString { get; set; }
         public string ShiftAPIUrl { get; set; }

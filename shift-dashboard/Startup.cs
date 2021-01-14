@@ -2,6 +2,7 @@ using BlazorTable;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -30,9 +31,14 @@ namespace shift_dashboard
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
             services.AddBlazorTable();
-            services.Configure<ShiftDashboardOptions>(Configuration.GetSection(ShiftDashboardOptions.Position));
-            services.AddTransient<ShiftApiService>();
 
+            ShiftDashboardConfig shiftDashboardConfig = new ShiftDashboardConfig();
+            Configuration.GetSection(shiftDashboardConfig.Position).Bind(shiftDashboardConfig);
+            services.AddSingleton<ShiftDashboardConfig>(shiftDashboardConfig);
+
+            services.AddTransient<ShiftApiService>();
+            services.AddDbContext<ShiftDashboardContext>(options => options.UseSqlServer(shiftDashboardConfig.ConnectionString));
+            
             services.AddQuartz(q =>
             {
                 // Create a "key" for the job

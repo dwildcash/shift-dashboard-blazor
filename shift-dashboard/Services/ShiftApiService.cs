@@ -10,11 +10,11 @@ namespace shift_dashboard.Services
 {
     public class ShiftApiService
     {
-        private ShiftDashboardOptions _shiftOptions;
+        private ShiftDashboardConfig _shiftOptions;
 
-        public ShiftApiService(IOptions<ShiftDashboardOptions> shiftoptions)
+        public ShiftApiService(ShiftDashboardConfig shiftoptions)
         {
-            _shiftOptions = shiftoptions.Value;
+            _shiftOptions = shiftoptions;
         }
 
         /// <summary>
