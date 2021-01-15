@@ -2,8 +2,6 @@
 {
     public class ShiftDashboardConfig
     {
-
-
         public string Position = "ShiftDashboard";
         public string ApplicationName { get; set; }
         public string ConnectionString { get; set; }

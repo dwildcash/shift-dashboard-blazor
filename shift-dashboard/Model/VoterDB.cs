@@ -29,8 +29,6 @@ namespace shift_dashboard.Model
         [Required]
         public DateTime Date { get; set; }
 
-
-        public ICollection<DelegateDB> DelegatesVote {get; set;}
-
+        public ICollection<DelegateDB> DelegatesVote { get; set; }
     }
 }

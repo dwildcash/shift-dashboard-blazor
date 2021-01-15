@@ -38,14 +38,14 @@ namespace shift_dashboard
 
             services.AddTransient<ShiftApiService>();
             services.AddDbContext<ShiftDashboardContext>(options => options.UseSqlServer(shiftDashboardConfig.ConnectionString));
-            
+
             services.AddQuartz(q =>
             {
                 // Create a "key" for the job
                 var jobKey = new JobKey("HelloWorldJob");
 
                 // Register the job with the DI container
-                q.AddJob<HelloWorldJob>(opts => opts.WithIdentity(jobKey));
+                q.AddJob<UpdateDelegateJob>(opts => opts.WithIdentity(jobKey));
 
                 // Create a trigger for the job
                 q.AddTrigger(opts => opts

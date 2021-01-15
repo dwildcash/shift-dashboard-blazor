@@ -2,7 +2,7 @@
 
 namespace shift_dashboard.Model
 {
-    public class Delegate
+    public class ShiftDelegate
     {
         public string username { get; set; }
         public string address { get; set; }
@@ -13,13 +13,13 @@ namespace shift_dashboard.Model
         public int rate { get; set; }
         public int rank { get; set; }
         public double approval { get; set; }
-        public int productivity { get; set; }
+        public double productivity { get; set; }
     }
 
     public class DelegateApiResult
     {
         public bool success { get; set; }
-        public List<Delegate> delegates { get; set; }
+        public List<ShiftDelegate> delegates { get; set; }
         public int totalCount { get; set; }
     }
 }

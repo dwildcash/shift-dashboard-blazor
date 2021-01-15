@@ -31,7 +31,7 @@ namespace shift_dashboard.Model
         public int Rate { get; set; }
         public int Rank { get; set; }
         public double Approval { get; set; }
-        public int Productivity { get; set; }
+        public double Productivity { get; set; }
 
         public ICollection<VoterDB> Voters {get; set;}
     }

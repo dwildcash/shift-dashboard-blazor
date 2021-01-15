@@ -2,7 +2,7 @@
 
 namespace shift_dashboard.Model
 {
-    public class Account
+    public class VoterAccount
     {
         public string username { get; set; }
         public string address { get; set; }
@@ -13,6 +13,6 @@ namespace shift_dashboard.Model
     public class VoterApiResult
     {
         public bool success { get; set; }
-        public List<Account> accounts { get; set; }
+        public List<VoterAccount> accounts { get; set; }
     }
 }

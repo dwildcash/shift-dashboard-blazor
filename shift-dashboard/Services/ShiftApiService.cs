@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using shift_dashboard.Model;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -17,12 +18,13 @@ namespace shift_dashboard.Services
             _shiftOptions = shiftoptions;
         }
 
+
         /// <summary>
         /// The FetchVoters
         /// </summary>
         /// <param name="publickey">The publickey<see cref="string"/></param>
         /// <returns>The <see cref="Task{VotersResult}"/></returns>
-        private async Task<VoterApiResult> FetchVoters(string publickey)
+        private async Task<List<VoterAccount>> FetchVoters(string publickey)
         {
             VoterApiResult voterApiResult;
 
@@ -34,7 +36,7 @@ namespace shift_dashboard.Services
                     var result = JObject.Parse(await hc.GetStringAsync(_shiftOptions.ShiftAPIUrl + "/api/delegates/voters?publicKey=" + publickey));
                     voterApiResult = JsonConvert.DeserializeObject<VoterApiResult>(result.ToString());
 
-                    return voterApiResult.success ? voterApiResult : null;
+                    return voterApiResult.success ? voterApiResult.accounts : null;
                 }
             }
             catch (Exception e)
@@ -48,7 +50,7 @@ namespace shift_dashboard.Services
         /// Fetch 407 top Delegates
         /// </summary>
         /// <returns></returns>
-        private async Task<DelegateApiResult> FetchDelegates()
+        public async Task<List<ShiftDelegate>> FetchDelegates()
         {
             try
             {
@@ -83,7 +85,7 @@ namespace shift_dashboard.Services
                         delegateResult.delegates.Add(o);
                     }
 
-                    return delegateResult.success && delegate102to203.success && delegate204to305.success && delegate306to407.success ? delegateResult : null;
+                    return delegateResult.success && delegate102to203.success && delegate204to305.success && delegate306to407.success ? delegateResult.delegates : null;
                 }
             }
             catch (Exception e)
