@@ -1,7 +1,10 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Quartz;
 using shift_dashboard.Data;
 using shift_dashboard.Services;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace shift_dashboard.Jobs
@@ -10,25 +13,47 @@ namespace shift_dashboard.Jobs
     public class UpdateDelegateJob : IJob
     {
         private readonly ILogger<UpdateDelegateJob> _logger;
-        private ShiftDashboardContext _dbcontext;
-        private ShiftApiService _shiftApiService;
+        private IApiService _apiService;
+        private DashboardContext _dbcontext;
 
-        public UpdateDelegateJob(ILogger<UpdateDelegateJob> logger, ShiftDashboardContext dbcontext, ShiftApiService shiftApiService)
+        public UpdateDelegateJob(ILogger<UpdateDelegateJob> logger, IApiService apiService, DashboardContext dbcontext)
         {
             _logger = logger;
-            _shiftApiService = shiftApiService;
+            _apiService = apiService;
             _dbcontext = dbcontext;
         }
 
         public Task Execute(IJobExecutionContext context)
         {
-            foreach (var sdelegate in _shiftApiService.FetchDelegates().Result )
+            try
             {
-                _logger.LogInformation(sdelegate.username);
-            }
+                var dbDelegates = _dbcontext.Delegates.ToListAsync().Result;
+                var apiDelegates = _apiService.ApiDelegates().Result;
 
-            
-            return Task.CompletedTask;
+                foreach (var sdelegate in apiDelegates)
+                {
+                    var ss = dbDelegates.FirstOrDefault(x => x.Address == sdelegate.Address);
+
+                    if (ss == null)
+                    {
+                        _dbcontext.Delegates.Add(sdelegate);
+                    }
+                    else
+                    {
+                        ss = sdelegate;
+                        _dbcontext.Delegates.Update(ss);
+                    }
+                }
+
+                _dbcontext.SaveChangesAsync();
+
+                return Task.CompletedTask;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.InnerException.ToString());
+                return null;
+            }
         }
     }
 }

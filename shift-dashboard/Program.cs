@@ -14,7 +14,7 @@ namespace shift_dashboard
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseUrls("http://localhost:6000");
+                    webBuilder.UseUrls("http://localhost:6000"); // Configure on port 6000 instead of default
                     webBuilder.UseStartup<Startup>();
                 });
     }

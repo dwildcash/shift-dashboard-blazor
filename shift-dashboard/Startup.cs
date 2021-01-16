@@ -29,20 +29,24 @@ namespace shift_dashboard
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<WeatherForecastService>();
             services.AddBlazorTable();
 
-            ShiftDashboardConfig shiftDashboardConfig = new ShiftDashboardConfig();
+            // Bind the Appsettings.json to shiftDashboardConfig
+            DashboardConfig shiftDashboardConfig = new DashboardConfig();
             Configuration.GetSection(shiftDashboardConfig.Position).Bind(shiftDashboardConfig);
-            services.AddSingleton<ShiftDashboardConfig>(shiftDashboardConfig);
+            services.AddSingleton<DashboardConfig>(shiftDashboardConfig);
 
-            services.AddTransient<ShiftApiService>();
-            services.AddDbContext<ShiftDashboardContext>(options => options.UseSqlServer(shiftDashboardConfig.ConnectionString));
+            // Initialize DB Context
+            services.AddDbContext<DashboardContext>(options => options.UseSqlServer(shiftDashboardConfig.ConnectionString));
 
+            // Shift Api Service (Need a DB Context before)
+            services.AddTransient<IApiService, ApiService>();
+
+            // Schedule Tasks.
             services.AddQuartz(q =>
             {
                 // Create a "key" for the job
-                var jobKey = new JobKey("HelloWorldJob");
+                var jobKey = new JobKey("UpdateDelegateJob");
 
                 // Register the job with the DI container
                 q.AddJob<UpdateDelegateJob>(opts => opts.WithIdentity(jobKey));
@@ -50,8 +54,8 @@ namespace shift_dashboard
                 // Create a trigger for the job
                 q.AddTrigger(opts => opts
                     .ForJob(jobKey) // link to the HelloWorldJob
-                    .WithIdentity("HelloWorldJob-trigger") // give the trigger a unique name
-                    .WithCronSchedule("0/5 * * * * ?")); // run every 5 seconds
+                    .WithIdentity("UpdateDelegateJob-trigger") // give the trigger a unique name
+                    .WithCronSchedule("* */1 * * * ?")); // run every 5 seconds
 
                 // Use a Scoped container to create jobs. I'll touch on this later
                 q.UseMicrosoftDependencyInjectionScopedJobFactory();

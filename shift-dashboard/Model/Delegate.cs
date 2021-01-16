@@ -1,25 +1,66 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace shift_dashboard.Model
 {
-    public class ShiftDelegate
+    [Index(nameof(Address), Name = "Index_Address", IsUnique = true)]
+    public class Delegate
     {
-        public string username { get; set; }
-        public string address { get; set; }
-        public string publicKey { get; set; }
-        public string vote { get; set; }
-        public int producedblocks { get; set; }
-        public int missedblocks { get; set; }
-        public int rate { get; set; }
-        public int rank { get; set; }
-        public double approval { get; set; }
-        public double productivity { get; set; }
+        [Key]
+        public int Id { get; set; }
+
+        [Required]
+        [MaxLength(50)]
+        [JsonProperty("username")]
+        public string Username { get; set; }
+
+        [Required]
+        [MaxLength(25)]
+        [JsonProperty("address")]
+        public string Address { get; set; }
+
+        [Required]
+        [MaxLength(64)]
+        [JsonProperty("publicKey")]
+        public string PublicKey { get; set; }
+
+        [MaxLength(24)]
+        [JsonProperty("vote")]
+        public string Vote { get; set; }
+
+        [JsonProperty("producedblocks")]
+        public int Producedblocks { get; set; }
+
+        [JsonProperty("missedblocks")]
+        public int Missedblocks { get; set; }
+
+        [JsonProperty("rate")]
+        public int Rate { get; set; }
+
+        [JsonProperty("rank")]
+        public int Rank { get; set; }
+
+        [JsonProperty("approval")]
+        public double Approval { get; set; }
+
+        [JsonProperty("productivity")]
+        public double Productivity { get; set; }
+
+        public ICollection<DelegateStat> DelegateStats { get; set; }
     }
 
     public class DelegateApiResult
     {
-        public bool success { get; set; }
-        public List<ShiftDelegate> delegates { get; set; }
-        public int totalCount { get; set; }
+        [JsonProperty("success")]
+        public bool Success { get; set; }
+
+        [JsonProperty("delegates")]
+        public List<Delegate> Delegates { get; set; }
+
+        [JsonProperty("totalCount")]
+        public int TotalCount { get; set; }
     }
 }
