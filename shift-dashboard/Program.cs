@@ -17,6 +17,16 @@ namespace shift_dashboard
                 {
                     webBuilder.UseUrls("http://localhost:6000"); // Configure on port 6000 instead of default
                     webBuilder.UseStartup<Startup>();
+
+                    // 👇 Add this "ConfigureAppConfiguration" method calling.
+                    webBuilder.ConfigureAppConfiguration((ctx, cb) =>
+                    {
+                        // 👇 This call inserts "StaticWebAssetsFileProvider" into
+                        //    the static file middleware.
+                        StaticWebAssetsLoader.UseStaticWebAssets(
+                          ctx.HostingEnvironment,
+                          ctx.Configuration);
+                    });
                 });
     }
 }

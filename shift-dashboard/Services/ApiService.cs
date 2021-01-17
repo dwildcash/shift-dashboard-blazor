@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using shift_dashboard.Data;
@@ -50,7 +49,6 @@ namespace shift_dashboard.Services
                         ss.Rate = sdelegate.Rate;
                         ss.Vote = sdelegate.Vote;
                         ss.Approval = sdelegate.Approval;
-
                     }
                 }
 

@@ -1,4 +1,6 @@
+using MatBlazor;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
@@ -10,11 +12,9 @@ using shift_dashboard.Data;
 using shift_dashboard.Jobs;
 using shift_dashboard.Model;
 using shift_dashboard.Services;
-using MatBlazor;
-using System.Net.Http;
-using System.Linq;
-using Microsoft.AspNetCore.Components;
 using System;
+using System.Linq;
+using System.Net.Http;
 
 namespace shift_dashboard
 {
