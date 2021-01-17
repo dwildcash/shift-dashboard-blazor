@@ -43,8 +43,14 @@ namespace shift_dashboard.Services
                     }
                     else
                     {
-                        ss = sdelegate;
-                        _dbcontext.Delegates.Update(ss);
+                        ss.Rank = sdelegate.Rank;
+                        ss.Missedblocks = sdelegate.Missedblocks;
+                        ss.Producedblocks = sdelegate.Producedblocks;
+                        ss.Productivity = sdelegate.Productivity;
+                        ss.Rate = sdelegate.Rate;
+                        ss.Vote = sdelegate.Vote;
+                        ss.Approval = sdelegate.Approval;
+
                     }
                 }
 
