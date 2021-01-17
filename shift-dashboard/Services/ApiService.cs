@@ -30,8 +30,8 @@ namespace shift_dashboard.Services
         {
             try
             {
-                var DelegatesFromDb = _dbcontext.Delegates.ToListAsync().Result;
-                var DelegatesFromApi = this.DelegatesFromApi().Result;
+                var DelegatesFromDb = _dbcontext.Delegates.ToList();
+                var DelegatesFromApi = this.GetDelegatesFromApiAsync().Result;
 
                 foreach (var sdelegate in DelegatesFromApi)
                 {
@@ -85,16 +85,16 @@ namespace shift_dashboard.Services
         /// Retreive All Delegate from Database
         /// </summary>
         /// <returns></returns>
-        public async Task<List<Delegate>> DelegatesFromDb()
+        public Delegate[] GetDelegatesFromDb()
         {
-            return await _dbcontext.Delegates.AsNoTracking().ToListAsync();
+            return _dbcontext.Delegates.ToArray();
         }
 
         /// <summary>
         ///  Retreive all Delegate From API
         /// </summary>
         /// <returns></returns>
-        public async Task<List<Delegate>> DelegatesFromApi()
+        public async Task<List<Delegate>> GetDelegatesFromApiAsync()
         {
             try
             {

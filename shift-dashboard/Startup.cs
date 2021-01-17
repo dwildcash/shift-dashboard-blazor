@@ -1,4 +1,3 @@
-using BlazorTable;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -11,6 +10,11 @@ using shift_dashboard.Data;
 using shift_dashboard.Jobs;
 using shift_dashboard.Model;
 using shift_dashboard.Services;
+using MatBlazor;
+using System.Net.Http;
+using System.Linq;
+using Microsoft.AspNetCore.Components;
+using System;
 
 namespace shift_dashboard
 {
@@ -29,7 +33,6 @@ namespace shift_dashboard
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddBlazorTable();
 
             // Bind the Appsettings.json to shiftDashboardConfig
             DashboardConfig shiftDashboardConfig = new DashboardConfig();
@@ -41,6 +44,9 @@ namespace shift_dashboard
 
             // Shift Api Service (Need a DB Context
             services.AddTransient<IApiService, ApiService>();
+
+            // Add MatBlaziore
+            services.AddMatBlazor();
 
             // Schedule Tasks.
             services.AddQuartz(q =>
@@ -65,6 +71,19 @@ namespace shift_dashboard
 
             services.AddQuartzHostedService(
                 q => q.WaitForJobsToComplete = true);
+
+            if (services.All(x => x.ServiceType != typeof(HttpClient)))
+            {
+                services.AddScoped(
+                    s =>
+                    {
+                        var navigationManager = s.GetRequiredService<NavigationManager>();
+                        return new HttpClient
+                        {
+                            BaseAddress = new Uri(navigationManager.BaseUri)
+                        };
+                    });
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

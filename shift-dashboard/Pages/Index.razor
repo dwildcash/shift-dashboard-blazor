@@ -1,5 +1,33 @@
 ﻿@page "/"
+@using shift_dashboard.Services;
 
-<h1>Hello, world!</h1>
+@inject IApiService _apservice;
+ 
+<MatTable Items="@sdelegates" class="mat-elevation-z5">
+    <MatTableHeader>
+        <th>Rank</th>
+        <th>Name</th>
+        <th>Address</th>
+        <th>Votes</th>
+    </MatTableHeader>
+    <MatTableRow>
+        <td>@context.Rank</td>
+        <td>@context.Username</td>
+        <td>@context.Address</td>
+        <td>@context.Vote</td>
+    </MatTableRow>
+</MatTable>
 
-Welcome to your new app.
+@code
+{
+
+    private shift_dashboard.Model.Delegate[] sdelegates;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        sdelegates = _apservice.GetDelegatesFromDb();
+
+    }
+
+}
