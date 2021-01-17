@@ -3,6 +3,7 @@
 
 # Ignore Appetting for now
 appsettings.json
+appsettings.Development.json
 
 # User-specific files
 *.suo
