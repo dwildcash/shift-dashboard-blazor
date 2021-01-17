@@ -37,9 +37,9 @@ namespace shift_dashboard
             services.AddSingleton<DashboardConfig>(shiftDashboardConfig);
 
             // Initialize DB Context
-            services.AddDbContext<DashboardContext>(options => options.UseSqlServer(shiftDashboardConfig.ConnectionString));
+            services.AddDbContext<DashboardContext>(options => options.UseSqlServer(shiftDashboardConfig.ConnectionString), ServiceLifetime.Transient);
 
-            // Shift Api Service (Need a DB Context before)
+            // Shift Api Service (Need a DB Context
             services.AddTransient<IApiService, ApiService>();
 
             // Schedule Tasks.

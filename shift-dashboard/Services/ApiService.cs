@@ -1,15 +1,15 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using shift_dashboard.Data;
 using shift_dashboard.Model;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Linq;
 using Delegate = shift_dashboard.Model.Delegate;
-using Microsoft.EntityFrameworkCore;
 
 namespace shift_dashboard.Services
 {
@@ -26,35 +26,38 @@ namespace shift_dashboard.Services
             _dbcontext = dbcontext;
         }
 
-
-        /// <summary>
-        /// Add a new Delegate
-        /// </summary>
-        /// <param name="sdelegate"></param>
-        /// <returns></returns>
-        public async Task<object> AddDbDelegate(Delegate sdelegate)
+        public async Task<object> UpdateDelegateDb()
         {
-            await _dbcontext.Delegates.AddAsync(sdelegate);
-            await _dbcontext.SaveChangesAsync();
+            try
+            {
+                var DelegatesFromDb = _dbcontext.Delegates.ToListAsync().Result;
+                var DelegatesFromApi = this.DelegatesFromApi().Result;
 
-            return Task.CompletedTask;
+                foreach (var sdelegate in DelegatesFromApi)
+                {
+                    var ss = DelegatesFromDb.FirstOrDefault(x => x.Address == sdelegate.Address);
+
+                    if (ss == null)
+                    {
+                        _dbcontext.Delegates.Add(sdelegate);
+                    }
+                    else
+                    {
+                        ss = sdelegate;
+                        _dbcontext.Delegates.Update(ss);
+                    }
+                }
+
+                await _dbcontext.SaveChangesAsync();
+
+                return Task.CompletedTask;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.InnerException.ToString());
+                return null;
+            }
         }
-
-
-
-        /// <summary>
-        /// Update an Existing Delegates
-        /// </summary>
-        /// <param name="dbDelegate"></param>
-        /// <returns></returns>
-        public async Task<object> UpdateDbDelegate(Delegate dbDelegate)
-        {
-            _dbcontext.Update(dbDelegate);
-            await _dbcontext.SaveChangesAsync();
-
-            return Task.CompletedTask;
-        }
-
 
         private async Task<List<Account>> ApiVoters(string publickey)
         {
@@ -78,21 +81,20 @@ namespace shift_dashboard.Services
             }
         }
 
-
         /// <summary>
         /// Retreive All Delegate from Database
         /// </summary>
         /// <returns></returns>
-        public async Task<List<Delegate>> DbDelegates()
+        public async Task<List<Delegate>> DelegatesFromDb()
         {
-            return await _dbcontext.Delegates.ToListAsync();
+            return await _dbcontext.Delegates.AsNoTracking().ToListAsync();
         }
 
         /// <summary>
         ///  Retreive all Delegate From API
         /// </summary>
         /// <returns></returns>
-        public async Task<List<Delegate>> ApiDelegates()
+        public async Task<List<Delegate>> DelegatesFromApi()
         {
             try
             {
