@@ -3,20 +3,24 @@
 
 @inject IApiService _apservice;
 
-<MatTable Items="@sdelegates" class="mat-elevation-z5">
-    <MatTableHeader>
-        <th>Rank</th>
-        <th>Name</th>
-        <th>Address</th>
-        <th>Votes</th>
-    </MatTableHeader>
-    <MatTableRow>
-        <td>@context.Rank</td>
-        <td>@context.Username</td>
-        <td>@context.Address</td>
-        <td>@context.Vote</td>
-    </MatTableRow>
-</MatTable>
+@using BlazorTable
+
+<h1>Delegates</h1>
+
+<Table TableItem="shift_dashboard.Model.Delegate" Items="sdelegates" PageSize="101" ShowSearchBar="true">
+    <Column TableItem="shift_dashboard.Model.Delegate" Title="Rank" Field="@(x => x.Rank)" Sortable="true" Filterable="true" Width="10%" />
+    <Column TableItem="shift_dashboard.Model.Delegate" Title="UserName" Field="@(x => x.Username)" Sortable="true" Filterable="true" Width="10%" />
+    <Column TableItem="shift_dashboard.Model.Delegate" Title="Address" Field="@(x => x.Address)" Sortable="true" Filterable="true" Width="20%" />
+    <Column TableItem="shift_dashboard.Model.Delegate" Title="Vote" Field="@(x => x.Vote)" Sortable="true" Filterable="true" Width="10%" />
+    <Column TableItem="shift_dashboard.Model.Delegate" Title="Approval" Field="@(x => x.Approval)" Sortable="true" Filterable="true" Width="5%" />
+    <Column TableItem="shift_dashboard.Model.Delegate" Title="Productivity" Field="@(x => x.Productivity)" Sortable="true" Filterable="true" Width="5%" />
+
+
+    <Pager ShowPageNumber="true" ShowTotalCount="true" ShowPageSizes="true" />
+</Table>
+
+
+
 
 @code
 {

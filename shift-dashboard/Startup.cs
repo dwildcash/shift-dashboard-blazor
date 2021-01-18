@@ -1,4 +1,4 @@
-using MatBlazor;
+using BlazorTable;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
@@ -46,7 +46,7 @@ namespace shift_dashboard
             services.AddTransient<IApiService, ApiService>();
 
             // Add MatBlaziore
-            services.AddMatBlazor();
+            services.AddBlazorTable();
 
             // Schedule Tasks.
             services.AddQuartz(q =>

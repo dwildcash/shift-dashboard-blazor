@@ -91,7 +91,7 @@ namespace shift_dashboard.Services
         /// <returns></returns>
         public Delegate[] GetDelegatesFromDb()
         {
-            return _dbcontext.Delegates.ToArray();
+            return _dbcontext.Delegates.OrderBy(x=>x.Rank).ToArray();
         }
 
         /// <summary>
