@@ -1,37 +1,56 @@
 ﻿@page "/"
 @using shift_dashboard.Services;
+@using Blazorise.DataGrid;
+@using Delegate = shift_dashboard.Model.Delegate;
 
 @inject IApiService _apservice;
 
-@using BlazorTable
+<Row>
+    <Column>
+        <Card Margin="Margin.Is4.OnY">
+            <CardHeader>
+                <CardTitle>Delegates</CardTitle>
+            </CardHeader>
+            <CardBody>
+                <CardText>Show All Delegates registred</CardText>
+            </CardBody>
+            <CardBody>
+                <DataGrid TItem="Delegate"
+                          Striped="true"
+                          Bordered="true"
+                          Hoverable="true"
+                          Responsive="true"
+                          ShowPager="true"
+                          PageSize="101"
+                          PagerPosition="DataGridPagerPosition.TopAndBottom"
+                          Data="@delegateList"
+                          ReadData="@OnReadData">
+                    <DataGridCommandColumn TItem="Delegate" />
+                    <DataGridColumn TItem="Delegate" Field="@nameof(Delegate.Rank)" Caption="Rank" Editable="true" />
+                    <DataGridColumn TItem="Delegate" Field="@nameof(Delegate.Username)" Caption="User Name" Editable="true" />
+                    <DataGridColumn TItem="Delegate" Field="@nameof(Delegate.Address)" Caption="Address" Editable="true" />
+                    <DataGridColumn TItem="Delegate" Field="@nameof(Delegate.Approval)" Caption="Approval" Editable="true" />
+                    <DataGridColumn TItem="Delegate" Field="@nameof(Delegate.Vote)" Caption="Vote" Editable="true" />
+                </DataGrid>
+            </CardBody>
+        </Card>
+    </Column>
+</Row>
 
-<h1>Delegates</h1>
+@code {
 
-<Table TableItem="shift_dashboard.Model.Delegate" Items="sdelegates" PageSize="101" ShowSearchBar="true">
-    <Column TableItem="shift_dashboard.Model.Delegate" Title="Rank" Field="@(x => x.Rank)" Sortable="true" Filterable="true" Width="10%" />
-    <Column TableItem="shift_dashboard.Model.Delegate" Title="UserName" Field="@(x => x.Username)" Sortable="true" Filterable="true" Width="10%" />
-    <Column TableItem="shift_dashboard.Model.Delegate" Title="Address" Field="@(x => x.Address)" Sortable="true" Filterable="true" Width="20%" />
-    <Column TableItem="shift_dashboard.Model.Delegate" Title="Vote" Field="@(x => x.Vote)" Sortable="true" Filterable="true" Width="10%" />
-    <Column TableItem="shift_dashboard.Model.Delegate" Title="Approval" Field="@(x => x.Approval)" Sortable="true" Filterable="true" Width="5%" />
-    <Column TableItem="shift_dashboard.Model.Delegate" Title="Productivity" Field="@(x => x.Productivity)" Sortable="true" Filterable="true" Width="5%" />
+    Delegate[] delegateList;
+    int totalDelegate;
 
-
-    <Pager ShowPageNumber="true" ShowTotalCount="true" ShowPageSizes="true" />
-</Table>
-
-
-
-
-@code
-{
-
-    private shift_dashboard.Model.Delegate[] sdelegates;
-
-    protected override async Task OnInitializedAsync()
+    async Task OnReadData(DataGridReadDataEventArgs<Delegate> e)
     {
-        await base.OnInitializedAsync();
-        sdelegates = _apservice.GetDelegatesFromDb();
+        // this can be call to anything, in this case we're calling a fictional api
+        delegateList = _apservice.GetDelegatesFromDb();
 
+        totalDelegate = delegateList.Count()/100; // this is used to tell datagrid how many items are available so that pagination will work
+
+        // always call StateHasChanged!
+        StateHasChanged();
     }
 
 }

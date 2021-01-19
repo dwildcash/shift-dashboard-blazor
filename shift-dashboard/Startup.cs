@@ -1,4 +1,6 @@
-using BlazorTable;
+using Blazorise;
+using Blazorise.Bootstrap;
+using Blazorise.Icons.FontAwesome;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
@@ -45,9 +47,6 @@ namespace shift_dashboard
             // Shift Api Service (Need a DB Context
             services.AddTransient<IApiService, ApiService>();
 
-            // Add MatBlaziore
-            services.AddBlazorTable();
-
             // Schedule Tasks.
             services.AddQuartz(q =>
             {
@@ -84,6 +83,10 @@ namespace shift_dashboard
                         };
                     });
             }
+
+            services.AddBlazorise(options =>{ options.ChangeTextOnKeyPress = true;});
+            services.AddBootstrapProviders();
+            services.AddFontAwesomeIcons();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -109,6 +112,10 @@ namespace shift_dashboard
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.ApplicationServices
+                .UseBootstrapProviders()
+                .UseFontAwesomeIcons();
 
             app.UseEndpoints(endpoints =>
             {

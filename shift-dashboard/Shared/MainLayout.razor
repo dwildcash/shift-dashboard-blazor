@@ -1,17 +1,116 @@
-﻿@inherits LayoutComponentBase
+﻿@layout RootLayout
+@inherits LayoutComponentBase
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
-
-    <div class="main">
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
-
-        <div class="content px-4">
+<Layout Sider="true">
+    <LayoutSider>
+        <LayoutSiderContent>
+            <Bar Breakpoint="Breakpoint.Desktop" NavigationBreakpoint="Breakpoint.Tablet" ThemeContrast="ThemeContrast.Dark"
+                 Mode="BarMode.VerticalInline" CollapseMode="BarCollapseMode.Small">
+                <BarToggler />
+                <BarBrand>
+                    <BarItem>
+                        <BarLink To="">
+                            <BarIcon IconName="customIcon" />
+                            SHIFT Dashboard
+                        </BarLink>
+                    </BarItem>
+                </BarBrand>
+                <BarMenu>
+                    <BarStart>
+                        <BarItem>
+                            <BarDropdown @bind-Visible="uiElementsVisibleKeyInfo">
+                                <BarDropdownToggle>
+                                    <BarIcon IconName="IconName.Key" />
+                                    Key Info
+                                </BarDropdownToggle>
+                                <BarDropdownMenu>
+                                    <BarDropdownItem To="https://www.shiftnrg.org/" Target="Target.Blank">
+                                        Website
+                                    </BarDropdownItem>
+                                    <BarDropdownItem To="https://github.com/ShiftNrg" Target="Target.Blank">
+                                        Github
+                                    </BarDropdownItem>
+                                    <BarDropdownItem To="https://medium.com/shiftnrg" Target="Target.Blank">
+                                        Medium
+                                    </BarDropdownItem>
+                                    <BarDropdownItem To="https://bit.ly/Recent_History" Target="Target.Blank">
+                                        Recent History
+                                    </BarDropdownItem>
+                                </BarDropdownMenu>
+                            </BarDropdown>
+                        </BarItem>
+                        <BarItem>
+                            <BarDropdown @bind-Visible="uiElementsVisibleWallet">
+                                <BarDropdownToggle>
+                                    <BarIcon IconName="IconName.Wallet" />
+                                    Wallets
+                                </BarDropdownToggle>
+                                <BarDropdownMenu>
+                                    <BarDropdownItem To="https://wallet.shiftnrg.org/" Target="Target.Blank">
+                                        Web
+                                    </BarDropdownItem>
+                                    <BarDropdownItem To="https://github.com/ShiftNrg/shift-nano/releases/tag/v2.3.0/" Target="Target.Blank">
+                                        Desktop
+                                    </BarDropdownItem>
+                                    <BarDropdownItem To="https://github.com/ShiftNrg/shift-paperwallet" Target="Target.Blank">
+                                        Paper
+                                    </BarDropdownItem>
+                                </BarDropdownMenu>
+                            </BarDropdown>
+                        </BarItem>
+                        <BarItem>
+                            <BarDropdown @bind-Visible="uiElementsVisibleExplorer">
+                                <BarDropdownToggle>
+                                    <BarIcon IconName="IconName.Dashboard" />
+                                    Explorer
+                                </BarDropdownToggle>
+                                <BarDropdownMenu>
+                                    <BarDropdownItem To="https://explorer.shiftnrg.org/" Target="Target.Blank">
+                                        Mainnet
+                                    </BarDropdownItem>
+                                    <BarDropdownItem To="https://explorer.testnet.shiftnrg.org/" Target="Target.Blank">
+                                        Testnet
+                                    </BarDropdownItem>
+                                </BarDropdownMenu>
+                            </BarDropdown>
+                        </BarItem>
+                    </BarStart>
+                </BarMenu>
+            </Bar>
+        </LayoutSiderContent>
+    </LayoutSider>
+    <Layout>
+        <LayoutHeader Fixed="true">
+            <Bar @bind-Visible="@topbarVisible" Breakpoint="Breakpoint.Desktop" Background="Background.Primary" ThemeContrast="ThemeContrast.Light">
+                <BarToggler />
+                <BarMenu>
+                    <BarStart>
+                        <BarItem>
+                            <BarLink To="https://dashboard.shiftnrg.org/">Home</BarLink>
+                        </BarItem>
+                    </BarStart>
+                    <BarEnd>
+                        <BarItem>
+                            <BarLink To="https://github.com/dwildcash">GitHub</BarLink>
+                        </BarItem>
+                    </BarEnd>
+                </BarMenu>
+            </Bar>
+        </LayoutHeader>
+        <LayoutContent Padding="Padding.Is4.OnX">
             @Body
-        </div>
-    </div>
-</div>
+        </LayoutContent>
+    </Layout>
+</Layout>
+
+@code{
+
+    private bool topbarVisible = false;
+    private bool uiElementsVisibleKeyInfo = false;
+    private bool uiElementsVisibleWallet = false;
+    private bool uiElementsVisibleExplorer = false;
+
+    [CascadingParameter] protected Theme Theme { get; set; }
+
+    RenderFragment customIcon =@<img src="/img/logo.png" style="width:32px; height: 32px" />;
+}
