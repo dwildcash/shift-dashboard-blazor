@@ -41,12 +41,9 @@ namespace shift_dashboard
             Configuration.GetSection(shiftDashboardConfig.Position).Bind(shiftDashboardConfig);
             services.AddSingleton<DashboardConfig>(shiftDashboardConfig);
 
-
             // Initialize DB Context
             services.AddDbContext<DashboardContext>(options => options.UseSqlServer(shiftDashboardConfig.ConnectionString), ServiceLifetime.Transient);
 
-
-         
             // Shift Api Service (Need a DB Context
             services.AddTransient<IApiService, ApiService>();
 
@@ -63,17 +60,16 @@ namespace shift_dashboard
 
                 // Create a trigger for the job
                 //
-                    q.AddTrigger(opts => opts
-                    .ForJob(updateDelegateJobKey) // link to the HelloWorldJob
-                    .WithIdentity("UpdateDelegateJob-trigger") // give the trigger a unique name
-                    .WithCronSchedule("* */59 * * * ?")); // run every 60 minutes
-                
+                q.AddTrigger(opts => opts
+                .ForJob(updateDelegateJobKey) // link to the HelloWorldJob
+                .WithIdentity("UpdateDelegateJob-trigger") // give the trigger a unique name
+                .WithCronSchedule("0/1 0 0/1 ? * * *")); // run every 60 minutes
 
                 // Create a trigger for the job
                 q.AddTrigger(opts => opts
                     .ForJob(updateDelegateStatJobKey) // link to the HelloWorldJob
                     .WithIdentity("UpdateDelegateStatJob-trigger") // give the trigger a unique name
-                    .WithCronSchedule("* 59 23 ? * *")); // run every 45 minutes
+                    .WithCronSchedule("0/1 0 0/6 ? * * *")); // run every 45 minutes
 
                 // Use a Scoped container to create jobs. I'll touch on this later
                 q.UseMicrosoftDependencyInjectionScopedJobFactory();
@@ -97,7 +93,7 @@ namespace shift_dashboard
                     });
             }
 
-            services.AddBlazorise(options =>{ options.ChangeTextOnKeyPress = true;});
+            services.AddBlazorise(options => { options.ChangeTextOnKeyPress = true; });
             services.AddBootstrapProviders();
             services.AddFontAwesomeIcons();
         }

@@ -49,6 +49,8 @@ namespace shift_dashboard.Model
         [JsonProperty("productivity")]
         public double Productivity { get; set; }
 
+        public DateTime Date { get; set; }
+
         public virtual ICollection<DelegateStat> DelegateStats { get; set; }
     }
 

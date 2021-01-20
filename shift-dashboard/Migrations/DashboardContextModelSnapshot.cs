@@ -19,51 +19,12 @@ namespace shift_dashboard.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.2");
 
-            modelBuilder.Entity("shift_dashboard.Model.Account", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasMaxLength(25)
-                        .HasColumnType("nvarchar(25)");
-
-                    b.Property<string>("Balance")
-                        .HasMaxLength(24)
-                        .HasColumnType("nvarchar(24)");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("PublicKey")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
-
-                    b.Property<string>("Username")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex(new[] { "Address" }, "Index_Address")
-                        .IsUnique();
-
-                    b.ToTable("Accounts");
-                });
-
             modelBuilder.Entity("shift_dashboard.Model.Delegate", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .UseIdentityColumn();
-
-                    b.Property<int?>("AccountId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Address")
                         .IsRequired()
@@ -72,6 +33,9 @@ namespace shift_dashboard.Migrations
 
                     b.Property<double>("Approval")
                         .HasColumnType("float");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("Missedblocks")
                         .HasColumnType("int");
@@ -104,11 +68,8 @@ namespace shift_dashboard.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AccountId");
-
                     b.HasIndex(new[] { "Address" }, "Index_Address")
-                        .IsUnique()
-                        .HasDatabaseName("Index_Address1");
+                        .IsUnique();
 
                     b.ToTable("Delegates");
                 });
@@ -142,25 +103,15 @@ namespace shift_dashboard.Migrations
                     b.ToTable("DelegateStats");
                 });
 
-            modelBuilder.Entity("shift_dashboard.Model.Delegate", b =>
-                {
-                    b.HasOne("shift_dashboard.Model.Account", null)
-                        .WithMany("DelegatesVote")
-                        .HasForeignKey("AccountId");
-                });
-
             modelBuilder.Entity("shift_dashboard.Model.DelegateStat", b =>
                 {
-                    b.HasOne("shift_dashboard.Model.Delegate", null)
+                    b.HasOne("shift_dashboard.Model.Delegate", "Delegate")
                         .WithMany("DelegateStats")
                         .HasForeignKey("DelegateId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
 
-            modelBuilder.Entity("shift_dashboard.Model.Account", b =>
-                {
-                    b.Navigation("DelegatesVote");
+                    b.Navigation("Delegate");
                 });
 
             modelBuilder.Entity("shift_dashboard.Model.Delegate", b =>
