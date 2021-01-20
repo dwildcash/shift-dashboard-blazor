@@ -10,5 +10,7 @@ namespace shift_dashboard.Services
         public Task<List<shift_dashboard.Model.Delegate>> GetDelegatesFromApiAsync();
 
         public Task<object> UpdateDelegateDb();
+
+        public Task<object> UpdateDelegateStatDb();
     }
 }

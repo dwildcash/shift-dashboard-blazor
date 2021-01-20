@@ -49,7 +49,7 @@ namespace shift_dashboard.Model
         [JsonProperty("productivity")]
         public double Productivity { get; set; }
 
-        public ICollection<DelegateStat> DelegateStats { get; set; }
+        public virtual ICollection<DelegateStat> DelegateStats { get; set; }
     }
 
     public class DelegateApiResult

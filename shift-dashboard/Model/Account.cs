@@ -12,7 +12,6 @@ namespace shift_dashboard.Model
         [Key]
         public int Id { get; set; }
 
-        [Required]
         [MaxLength(50)]
         [JsonProperty("username")]
         public string Username { get; set; }
@@ -35,7 +34,7 @@ namespace shift_dashboard.Model
         [JsonProperty("date")]
         public DateTime Date { get; set; }
 
-        public ICollection<Delegate> DelegatesVote { get; set; }
+        public virtual ICollection<Delegate> DelegatesVote { get; set; }
     }
 
     public class VoterApiResult
@@ -43,7 +42,7 @@ namespace shift_dashboard.Model
         [JsonProperty("Success")]
         public bool Success { get; set; }
 
-        [JsonProperty("account")]
+        [JsonProperty("accounts")]
         public List<Account> Accounts { get; set; }
     }
 }

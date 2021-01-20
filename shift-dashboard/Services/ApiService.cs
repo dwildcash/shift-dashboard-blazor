@@ -25,6 +25,42 @@ namespace shift_dashboard.Services
             _dbcontext = dbcontext;
         }
 
+        public async Task<object> UpdateDelegateStatDb()
+        {
+            try
+            {
+
+                var Scandate = DateTime.Now;
+
+                foreach (var sdelegate in _dbcontext.Delegates.ToList())
+                {
+                    var publicKey = sdelegate.PublicKey;
+                    var voters = await this.GetVoters(publicKey);
+
+                    var svoteList = new List<DelegateStat>();
+
+                    var sdelegateStat = new DelegateStat
+                    {
+                        Date = Scandate,
+                        Rank = sdelegate.Rank,
+                        TotalVotes = long.Parse(sdelegate.Vote),
+                        TotalVoters = voters.Count,
+                        DelegateId = sdelegate.Id
+                    };
+
+                    _dbcontext.DelegateStats.Add(sdelegateStat);
+                }
+
+                await _dbcontext.SaveChangesAsync();
+                return Task.CompletedTask;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.InnerException.ToString());
+                return null;
+            }
+        }
+
         public async Task<object> UpdateDelegateDb()
         {
             try
@@ -63,7 +99,7 @@ namespace shift_dashboard.Services
             }
         }
 
-        private async Task<List<Account>> ApiVoters(string publickey)
+        private async Task<List<Account>> GetVoters(string publickey)
         {
             VoterApiResult voterApiResult;
 

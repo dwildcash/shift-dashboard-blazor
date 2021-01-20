@@ -16,21 +16,34 @@
             </CardBody>
             <CardBody>
                 <DataGrid TItem="Delegate"
-                          Striped="true"
                           Bordered="true"
                           Hoverable="true"
-                          Responsive="true"
                           ShowPager="true"
-                          PageSize="101"
-                          PagerPosition="DataGridPagerPosition.TopAndBottom"
+                          Sortable="true"
+                          PagerPosition="DataGridPagerPosition.Bottom"
                           Data="@delegateList"
-                          ReadData="@OnReadData">
-                    <DataGridCommandColumn TItem="Delegate" />
-                    <DataGridColumn TItem="Delegate" Field="@nameof(Delegate.Rank)" Caption="Rank" Editable="true" />
-                    <DataGridColumn TItem="Delegate" Field="@nameof(Delegate.Username)" Caption="User Name" Editable="true" />
-                    <DataGridColumn TItem="Delegate" Field="@nameof(Delegate.Address)" Caption="Address" Editable="true" />
-                    <DataGridColumn TItem="Delegate" Field="@nameof(Delegate.Approval)" Caption="Approval" Editable="true" />
-                    <DataGridColumn TItem="Delegate" Field="@nameof(Delegate.Vote)" Caption="Vote" Editable="true" />
+                          ReadData="@OnReadData"
+                          TotalItems="500">
+                          
+                    <EmptyTemplate>
+                        <div class="box">
+                            <progress class="progress is-small is-primary" max="100" />
+                        </div>
+                    </EmptyTemplate>
+                    <LoadingTemplate>
+                        <div class="box">
+                            No Delegate Found
+                        </div>
+                    </LoadingTemplate>
+                    <ChildContent>
+                        <DataGridCommandColumn TItem="Delegate" />
+                        <DataGridColumn TItem="Delegate" Field="@nameof(Delegate.Rank)" Caption="Rank" />
+                        <DataGridColumn TItem="Delegate" Field="@nameof(Delegate.Username)" Caption="User Name" />
+                        <DataGridColumn TItem="Delegate" Field="@nameof(Delegate.Address)" Caption="Address" />
+                        <DataGridColumn TItem="Delegate" Field="@nameof(Delegate.Approval)" Caption="Approval" />
+                        <DataGridColumn TItem="Delegate" Field="@nameof(Delegate.Vote)" Caption="Vote" />
+                    </ChildContent>
+
                 </DataGrid>
             </CardBody>
         </Card>
@@ -39,15 +52,15 @@
 
 @code {
 
-    Delegate[] delegateList;
+    List<Delegate> delegateList;
     int totalDelegate;
 
     async Task OnReadData(DataGridReadDataEventArgs<Delegate> e)
     {
         // this can be call to anything, in this case we're calling a fictional api
-        delegateList = _apservice.GetDelegatesFromDb();
+        delegateList = _apservice.GetDelegatesFromDb().ToList();
 
-        totalDelegate = delegateList.Count()/100; // this is used to tell datagrid how many items are available so that pagination will work
+        totalDelegate = delegateList.Count(); // this is used to tell datagrid how many items are available so that pagination will work
 
         // always call StateHasChanged!
         StateHasChanged();

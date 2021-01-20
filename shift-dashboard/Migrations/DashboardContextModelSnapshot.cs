@@ -38,22 +38,16 @@ namespace shift_dashboard.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("DelegateStatId")
-                        .HasColumnType("int");
-
                     b.Property<string>("PublicKey")
                         .IsRequired()
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
 
                     b.Property<string>("Username")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DelegateStatId");
 
                     b.HasIndex(new[] { "Address" }, "Index_Address")
                         .IsUnique();
@@ -135,21 +129,17 @@ namespace shift_dashboard.Migrations
                     b.Property<int>("Rank")
                         .HasColumnType("int");
 
-                    b.Property<int>("TotalVotes")
+                    b.Property<int>("TotalVoters")
                         .HasColumnType("int");
+
+                    b.Property<long>("TotalVotes")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
                     b.HasIndex("DelegateId");
 
                     b.ToTable("DelegateStats");
-                });
-
-            modelBuilder.Entity("shift_dashboard.Model.Account", b =>
-                {
-                    b.HasOne("shift_dashboard.Model.DelegateStat", null)
-                        .WithMany("Voters")
-                        .HasForeignKey("DelegateStatId");
                 });
 
             modelBuilder.Entity("shift_dashboard.Model.Delegate", b =>
@@ -176,11 +166,6 @@ namespace shift_dashboard.Migrations
             modelBuilder.Entity("shift_dashboard.Model.Delegate", b =>
                 {
                     b.Navigation("DelegateStats");
-                });
-
-            modelBuilder.Entity("shift_dashboard.Model.DelegateStat", b =>
-                {
-                    b.Navigation("Voters");
                 });
 #pragma warning restore 612, 618
         }
