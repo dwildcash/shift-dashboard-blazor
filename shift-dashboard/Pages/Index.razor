@@ -12,24 +12,17 @@
                 <CardTitle>Delegates</CardTitle>
             </CardHeader>
             <CardBody>
-                <CardText>Show All Delegates registred</CardText>
+                <CardText>Show Top 303 Delegates registred</CardText>
             </CardBody>
             <CardBody>
                 <DataGrid TItem="Delegate"
                           Bordered="true"
                           Hoverable="true"
+                          PageSize="101"
                           ShowPager="true"
                           Sortable="true"
                           PagerPosition="DataGridPagerPosition.Bottom"
-                          Data="@delegateList"
-                          ReadData="@OnReadData"
-                          TotalItems="500">
-                          
-                    <EmptyTemplate>
-                        <div class="box">
-                            <progress class="progress is-small is-primary" max="100" />
-                        </div>
-                    </EmptyTemplate>
+                          Data="@delegateList">
                     <LoadingTemplate>
                         <div class="box">
                             No Delegate Found
@@ -43,7 +36,6 @@
                         <DataGridColumn TItem="Delegate" Field="@nameof(Delegate.Approval)" Caption="Approval" />
                         <DataGridColumn TItem="Delegate" Field="@nameof(Delegate.Vote)" Caption="Vote" />
                     </ChildContent>
-
                 </DataGrid>
             </CardBody>
         </Card>
@@ -53,14 +45,12 @@
 @code {
 
     List<Delegate> delegateList;
-    int totalDelegate;
 
-    async Task OnReadData(DataGridReadDataEventArgs<Delegate> e)
+    protected override async Task OnInitializedAsync()
     {
+
         // this can be call to anything, in this case we're calling a fictional api
         delegateList = _apservice.GetDelegatesFromDb().ToList();
-
-        totalDelegate = delegateList.Count(); // this is used to tell datagrid how many items are available so that pagination will work
 
         // always call StateHasChanged!
         StateHasChanged();
