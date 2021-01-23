@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -9,7 +10,11 @@ namespace shift_dashboard.Model
     [Index(nameof(Address), Name = "Index_Address", IsUnique = true)]
     public class Delegate
     {
-        [Key]
+
+        public Delegate()
+        {
+            this.DelegateStats = new HashSet<DelegateStat>();
+        }
         public int Id { get; set; }
 
         [Required]

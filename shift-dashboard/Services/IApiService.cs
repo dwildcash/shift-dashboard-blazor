@@ -11,6 +11,5 @@ namespace shift_dashboard.Services
 
         public Task<object> UpdateDelegateDb();
 
-        public Task<object> UpdateDelegateStatDb();
     }
 }

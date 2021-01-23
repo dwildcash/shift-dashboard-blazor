@@ -13,6 +13,7 @@ namespace shift_dashboard.Data
         {
         }
 
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

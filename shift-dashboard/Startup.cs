@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure;
 using Quartz;
 using shift_dashboard.Data;
 using shift_dashboard.Jobs;
@@ -42,7 +43,13 @@ namespace shift_dashboard
             services.AddSingleton<DashboardConfig>(shiftDashboardConfig);
 
             // Initialize DB Context
-            services.AddDbContext<DashboardContext>(options => options.UseSqlServer(shiftDashboardConfig.ConnectionString), ServiceLifetime.Transient);
+            services.AddDbContext<DashboardContext>(options =>
+            {
+                var builder = new NpgsqlDbContextOptionsBuilder(options);
+                builder.SetPostgresVersion(new Version(9, 6));
+                options.UseNpgsql(shiftDashboardConfig.ConnectionString);
+            }
+            );
 
             // Shift Api Service (Need a DB Context
             services.AddTransient<IApiService, ApiService>();
@@ -52,24 +59,16 @@ namespace shift_dashboard
             {
                 // Create a "key" for the job
                 var updateDelegateJobKey = new JobKey("UpdateDelegateJob");
-                var updateDelegateStatJobKey = new JobKey("UpdateDelegateStatJob");
 
                 // Register the job with the DI container
                 q.AddJob<UpdateDelegateJob>(opts => opts.WithIdentity(updateDelegateJobKey));
-                q.AddJob<UpdateDelegateStatJob>(opts => opts.WithIdentity(updateDelegateStatJobKey));
 
                 // Create a trigger for the job
                 //
                 q.AddTrigger(opts => opts
-                .ForJob(updateDelegateJobKey) // link to the HelloWorldJob
+                .ForJob(updateDelegateJobKey)
                 .WithIdentity("UpdateDelegateJob-trigger") // give the trigger a unique name
-                .WithCronSchedule("0/1 0 0/1 ? * * *")); // run every 60 minutes
-
-                // Create a trigger for the job
-                q.AddTrigger(opts => opts
-                    .ForJob(updateDelegateStatJobKey) // link to the HelloWorldJob
-                    .WithIdentity("UpdateDelegateStatJob-trigger") // give the trigger a unique name
-                    .WithCronSchedule("0/1 0 0/6 ? * * *")); // run every 45 minutes
+                .WithCronSchedule("0 */2 * * * ?")); ; // run every 45 minutes
 
                 // Use a Scoped container to create jobs. I'll touch on this later
                 q.UseMicrosoftDependencyInjectionScopedJobFactory();
