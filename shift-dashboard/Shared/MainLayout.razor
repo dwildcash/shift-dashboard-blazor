@@ -5,7 +5,7 @@
     <LayoutSider>
         <LayoutSiderContent>
             <Bar Breakpoint="Breakpoint.Desktop" NavigationBreakpoint="Breakpoint.Tablet" ThemeContrast="ThemeContrast.Dark"
-                 Mode="BarMode.VerticalInline" CollapseMode="BarCollapseMode.Small">
+                 Mode="BarMode.VerticalInline" CollapseMode="BarCollapseMode.Hide">
                 <BarToggler />
                 <BarBrand>
                     <BarItem>
@@ -82,10 +82,6 @@
     <Layout>
         <LayoutHeader Fixed="true">
             <Bar @bind-Visible="@topbarVisible" Breakpoint="Breakpoint.Desktop" Background="Background.Primary" ThemeContrast="ThemeContrast.Light">
-                <BarToggler />
-                <BarMenu>
-                
-                </BarMenu>
             </Bar>
         </LayoutHeader>
         <LayoutContent Padding="Padding.Is4.OnX">
@@ -96,7 +92,7 @@
 
 @code{
 
-    private bool topbarVisible = false;
+    private bool topbarVisible = true;
     private bool uiElementsVisibleKeyInfo = false;
     private bool uiElementsVisibleWallet = false;
     private bool uiElementsVisibleExplorer = false;

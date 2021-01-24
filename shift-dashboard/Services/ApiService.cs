@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using shift_dashboard.Data;
@@ -105,9 +106,11 @@ namespace shift_dashboard.Services
         /// Retreive All Delegate from Database
         /// </summary>
         /// <returns></returns>
-        public Delegate[] GetDelegatesFromDb()
+        public async Task<Delegate[]> GetDelegatesFromDb()
         {
-            return _dbcontext.Delegates.OrderBy(x => x.Rank).ToArray();
+            return await _dbcontext.Delegates.Include(y=>y.DelegateStats).OrderBy(x => x.Rank).ToArrayAsync();
+
+            //  _dbcontext.Delegates.Include(d => d.DelegateStats.OrderByDescending(x => x.Date)).Include(x => x.DelegateStats.Single(x => x.Date >= DateTime.Now.AddMinutes(-2))).OrderBy(x => x.Rank).ToArray();
         }
 
         /// <summary>

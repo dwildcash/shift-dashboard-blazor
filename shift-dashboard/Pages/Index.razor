@@ -5,15 +5,18 @@
 
 @inject IApiService _apservice;
 
+@if (IsLoading)
+{
+    <shift_dashboard.Components.SpinKitCubeGrid/>
+}
+else
+{
 <Row>
     <Column>
         <Card Margin="Margin.Is4.OnY">
             <CardHeader>
-                <CardTitle>Delegates</CardTitle>
+                <CardTitle>Top 303 Delegates registred</CardTitle>
             </CardHeader>
-            <CardBody>
-                <CardText>Show Top 303 Delegates registred</CardText>
-            </CardBody>
             <CardBody>
                 <DataGrid TItem="Delegate"
                           Bordered="true"
@@ -21,6 +24,7 @@
                           PageSize="101"
                           ShowPager="true"
                           Sortable="true"
+                          Responsive="true"
                           PagerPosition="DataGridPagerPosition.Bottom"
                           Data="@delegateList">
                     <LoadingTemplate>
@@ -41,17 +45,25 @@
         </Card>
     </Column>
 </Row>
+}
 
 @code {
-
-    List<Delegate> delegateList;
+    protected bool IsLoading { get; set; }
+    Delegate[] delegateList;
 
     protected override async Task OnInitializedAsync()
     {
+        IsLoading = true;
+
+   
+        // always call StateHasChanged!
+        StateHasChanged();
 
         // this can be call to anything, in this case we're calling a fictional api
-        delegateList = _apservice.GetDelegatesFromDb().ToList();
+        delegateList = await _apservice.GetDelegatesFromDb();
 
+        IsLoading = false;
+        await Task.Delay(1);
         // always call StateHasChanged!
         StateHasChanged();
     }

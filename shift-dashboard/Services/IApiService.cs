@@ -5,7 +5,7 @@ namespace shift_dashboard.Services
 {
     public interface IApiService
     {
-        public shift_dashboard.Model.Delegate[] GetDelegatesFromDb();
+        public Task<shift_dashboard.Model.Delegate[]> GetDelegatesFromDb();
 
         public Task<List<shift_dashboard.Model.Delegate>> GetDelegatesFromApiAsync();
 
