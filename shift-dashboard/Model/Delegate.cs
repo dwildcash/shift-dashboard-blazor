@@ -1,20 +1,20 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace shift_dashboard.Model
 {
     [Index(nameof(Address), Name = "Index_Address", IsUnique = true)]
-    public class Delegate
+    public partial class Delegate
     {
-
         public Delegate()
         {
             this.DelegateStats = new HashSet<DelegateStat>();
         }
+
         public int Id { get; set; }
 
         [Required]
@@ -57,6 +57,14 @@ namespace shift_dashboard.Model
         public DateTime Date { get; set; }
 
         public virtual ICollection<DelegateStat> DelegateStats { get; set; }
+    }
+
+    public partial class Delegate
+    {
+        public int NbVoters
+        {
+            get { return this.DelegateStats.Where(x => x.Date > DateTime.Now.AddMinutes(-100)).FirstOrDefault<DelegateStat>().TotalVoters; }
+        }
     }
 
     public class DelegateApiResult

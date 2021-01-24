@@ -37,7 +37,7 @@ else
                         <DataGridColumn TItem="Delegate" Field="@nameof(Delegate.Rank)" Caption="Rank" />
                         <DataGridColumn TItem="Delegate" Field="@nameof(Delegate.Username)" Caption="User Name" />
                         <DataGridColumn TItem="Delegate" Field="@nameof(Delegate.Address)" Caption="Address" />
-                        <DataGridColumn TItem="Delegate" Field="@nameof(Delegate.Approval)" Caption="Approval" />
+                        <DataGridColumn TItem="Delegate" Field="@nameof(Delegate.NbVoters)" Caption="Nb Voters" />
                         <DataGridColumn TItem="Delegate" Field="@nameof(Delegate.Vote)" Caption="Vote" />
                     </ChildContent>
                 </DataGrid>
@@ -51,11 +51,12 @@ else
     protected bool IsLoading { get; set; }
     Delegate[] delegateList;
 
+
     protected override async Task OnInitializedAsync()
     {
         IsLoading = true;
 
-   
+
         // always call StateHasChanged!
         StateHasChanged();
 
