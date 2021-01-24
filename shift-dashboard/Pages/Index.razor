@@ -7,55 +7,57 @@
 
 @if (IsLoading)
 {
-    <shift_dashboard.Components.SpinKitCubeGrid/>
+    <shift_dashboard.Components.SpinKitCubeGrid />
 }
 else
 {
-<Row>
-    <Column>
-        <Card Margin="Margin.Is4.OnY">
-            <CardHeader>
-                <CardTitle>Top 303 Delegates registred</CardTitle>
-            </CardHeader>
-            <CardBody>
-                <DataGrid TItem="Delegate"
-                          Bordered="true"
-                          Hoverable="true"
-                          PageSize="101"
-                          ShowPager="true"
-                          Sortable="true"
-                          Responsive="true"
-                          PagerPosition="DataGridPagerPosition.Bottom"
-                          Data="@delegateList">
-                    <LoadingTemplate>
-                        <div class="box">
-                            No Delegate Found
-                        </div>
-                    </LoadingTemplate>
-                    <ChildContent>
-                        <DataGridCommandColumn TItem="Delegate" />
-                        <DataGridColumn TItem="Delegate" Field="@nameof(Delegate.Rank)" Caption="Rank" />
-                        <DataGridColumn TItem="Delegate" Field="@nameof(Delegate.Username)" Caption="User Name" />
-                        <DataGridColumn TItem="Delegate" Field="@nameof(Delegate.Address)" Caption="Address" />
-                        <DataGridColumn TItem="Delegate" Field="@nameof(Delegate.NbVoters)" Caption="Nb Voters" />
-                        <DataGridColumn TItem="Delegate" Field="@nameof(Delegate.Vote)" Caption="Vote" />
-                    </ChildContent>
-                </DataGrid>
-            </CardBody>
-        </Card>
-    </Column>
-</Row>
+    <Row>
+        <Column>
+            <Card Margin="Margin.Is4.OnY">
+                <CardHeader>
+                    <CardTitle>Top 303 Delegates registred</CardTitle>
+                </CardHeader>
+                <CardBody>
+                    <DataGrid TItem="Delegate"
+                              Bordered="true"
+                              Hoverable="true"
+                              PageSize="101"
+                              ShowPager="true"
+                              Sortable="true"
+                              Responsive="true"
+                              PagerPosition="DataGridPagerPosition.Bottom"
+                              Data="@delegateList">
+                        <LoadingTemplate>
+                            <div class="box">
+                                No Delegate Found
+                            </div>
+                        </LoadingTemplate>
+                        <ChildContent>
+                            <DataGridCommandColumn TItem="Delegate" />
+                            <DataGridColumn TItem="Delegate" Field="@nameof(Delegate.Rank)" Caption="Rank" />
+                            <DataGridColumn TItem="Delegate" Field="@nameof(Delegate.Username)" Caption="User Name" />
+                            <DataGridColumn TItem="Delegate" Field="@nameof(Delegate.Address)" Caption="Address" />
+                            <DataGridColumn TItem="Delegate" Field="@nameof(Delegate.NbVoters)" Caption="Nb Voters" />
+                            <DataGridColumn TItem="Delegate" Field="@nameof(Delegate.Vote)" Caption="Vote">
+                                <DisplayTemplate>
+                                     @((long.Parse(context.Vote)/100000000).ToString("N0"))
+                                </DisplayTemplate>
+                            </DataGridColumn>
+                        </ChildContent>
+                    </DataGrid>
+                </CardBody>
+            </Card>
+        </Column>
+    </Row>
 }
 
 @code {
     protected bool IsLoading { get; set; }
     Delegate[] delegateList;
 
-
     protected override async Task OnInitializedAsync()
     {
         IsLoading = true;
-
 
         // always call StateHasChanged!
         StateHasChanged();
